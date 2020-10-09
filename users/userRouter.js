@@ -1,8 +1,11 @@
+const dataBase= require("./userDb")
 const express = require('express');
-const { checkUserId, checkUserData} =require("./middleware/user")
+const { validateUserId, validateUser, validatePost} =require("../middleware/user");
+const users = require("../middleware/user");
 const router = express.Router();
 
-router.post('/', checkUserData(),(req, res) => {
+
+router.post('/', validateUser(),(req, res) => {
   // do your magic!
   users.insert(req.body)
 		.then((user) => {
@@ -13,7 +16,7 @@ router.post('/', checkUserData(),(req, res) => {
 		})
 });
 
-router.post('/:id/posts',checkUserId(), (req, res) => {
+router.post('/:id/posts',validateUserId(), (req, res) => {
   // do your magic!
   if (!req.body.text) {
 		return res.status(400).json({
@@ -32,27 +35,25 @@ router.post('/:id/posts',checkUserId(), (req, res) => {
 
 router.get('/', (req, res) => {
   // do your magic!
-  const options = {
-		sortBy: req.query.sortBy,
-		limit: req.query.limit,
-	}
-
-	users.find(options)
-		.then((users) => {
-			res.status(200).json(users)
-		})
+  // const options = {
+	// 	sortBy: req.query.sortBy,
+  // 	limit: req.query.limit,
+  dataBase.get()
+  .then(user=>{
+  	res.status(200).json(users)
+  }) 
 		.catch((error) => {
 			next(error)
 		})
 });
 
-router.get('/:id', checkUserId(), (req, res) => {
+router.get('/:id', validateUserId(), (req, res) => {
   // do your magic!
   
   res.status(200).json(req.user)
 });
 
-router.get('/:id/posts',checkUserId(), (req, res) => {
+router.get('/:id/posts',validateUserId(), (req, res) => {
   // do your magic!
   users.findUserPosts(req.params.id)
 		.then((posts) => {
@@ -63,7 +64,7 @@ router.get('/:id/posts',checkUserId(), (req, res) => {
 		})
 });
 
-router.delete('/:id',checkUserId(), (req, res) => {
+router.delete('/:id',validateUserId(), (req, res) => {
   // do your magic!
   users.remove(req.params.id)
 		.then((count) => {
@@ -82,7 +83,7 @@ router.delete('/:id',checkUserId(), (req, res) => {
 		})
 });
 
-router.put('/:id', checkUserData(), checkUserId(), (req, res) => {
+router.put('/:id', validateUser(), validateUserId(), (req, res) => {
   // do your magic!
   users.update(req.params.id, req.body)
 		.then((user) => {
@@ -99,18 +100,18 @@ router.put('/:id', checkUserData(), checkUserId(), (req, res) => {
 		})
 });
 
-//custom middleware
+// //custom middleware
 
-function validateUserId(req, res, next) {
-  // do your magic!
-}
+// function validateUserId(req, res, next) {
+//   // do your magic!
+// }
 
-function validateUser(req, res, next) {
-  // do your magic!
-}
+// function validateUser(req, res, next) {
+//   // do your magic!
+// }
 
-function validatePost(req, res, next) {
-  // do your magic!
-}
+// function validatePost(req, res, next) {
+//   // do your magic!
+// }
 
 module.exports = router;

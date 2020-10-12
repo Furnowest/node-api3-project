@@ -25,13 +25,16 @@ server.use(logger)
 server.use("/user", userRoute)
 // server.use("/post", postRoute)
 
-server.use((err, req, res, next) => {
-  console.log(err)
-  res.status(500).json({
-    // this is so we dont have to write catch and it will show this msg when something is wrong on server side/ custom error middleware
-    message: "Something went wrong, please try again later",
-  })
-})
+// server.use((err, req, res, next) => {
+//   console.log(err)
+//   res.status(500).json({
+//     // this is so we dont have to write catch and it will show this msg when something is wrong on server side/ custom error middleware
+//     message: "Something went wrong, please try again later",
+//   })
+// })
+server.use(function(req, res) {
+  res.status(404).send("Ain't nobody got time for that!");
+});
 
 
 module.exports = server;

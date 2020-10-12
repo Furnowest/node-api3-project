@@ -1,11 +1,11 @@
-const dataBase= require("./userDb")
+const userDb= require("./userDb")
 const express = require('express');
 const { validateUserId, validateUser, validatePost} =require("../middleware/user");
 const users = require("../middleware/user");
 const router = express.Router();
 
 
-router.post('/', validateUser(),(req, res) => {
+router.post('/', validatePost(),(req, res) => {
   // do your magic!
   users.insert(req.body)
 		.then((user) => {
@@ -34,11 +34,7 @@ router.post('/:id/posts',validateUserId(), (req, res) => {
 });
 
 router.get('/', (req, res) => {
-  // do your magic!
-  // const options = {
-	// 	sortBy: req.query.sortBy,
-  // 	limit: req.query.limit,
-  dataBase.get()
+  userDb.get()
   .then(user=>{
   	res.status(200).json(users)
   }) 
@@ -48,8 +44,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', validateUserId(), (req, res) => {
-  // do your magic!
-  
+
   res.status(200).json(req.user)
 });
 

@@ -2,9 +2,8 @@
 const server = require("./server")
 
 
-// const logger = require("./middleware/logger")
+const port =process.send.PORT||5000
 
-const port = 5000
 
 
 server.listen(port, () => {
